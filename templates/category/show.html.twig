@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Séries dans cette categorie {{ categoryName }} {% endblock %}
+
+{% block body %}
+    <div class="media">
+        <div class="media-body">
+            <h1 class="mt-0"> Les dernière séries de la categorie {{ categoryName }}</h1>
+
+                {% for program in programs %}
+                    <div>
+                        <h2>{{ program.id }} / {{ program.title }} </h2>
+                        <p>{{ program.summary }}</p>
+                        {# Lien vers la fiche de la série : #}
+                        <a href="{{ path("program_show", { id: program.id }) }}">Voir la fiche</a>
+                    </div>
+                {% else %}
+                    Aucune série trouvée.
+                {% endfor %}
+
+
+        </div>
+    </div>
+
+    <a href="{{ path('program_index') }}">
+        Retour à la liste des programmes
+    </a>
+{% endblock %}
