@@ -14,7 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class CategoryController extends AbstractController
 {
     /**
-     * 
+     *
      * @Route("/", name="index")
      */
     public function index(): Response
@@ -55,7 +55,7 @@ class CategoryController extends AbstractController
         $programs = $this->getDoctrine()
             ->getRepository(Program::class)
             ->findBy(
-                ['Category' => $verifyCategory[0]->getId()],
+                ['category' => $verifyCategory[0]->getId()],
                 ['id' => 'DESC'],
                 3,
                 0
