@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Episode;
+use App\Entity\Program;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\SeasonRepository;
 use Doctrine\Common\Collections\Collection;
