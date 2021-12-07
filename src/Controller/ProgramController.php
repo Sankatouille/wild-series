@@ -57,6 +57,7 @@ class ProgramController extends AbstractController
         if ($form->isSubmitted()) {
             // Deal with the submitted data
             // Get the Entity Manager
+            dd($program);
             $entityManager = $this->getDoctrine()->getManager();
             // Persist Category Object
             $entityManager->persist($program);

@@ -22,7 +22,7 @@ class ProgramType extends AbstractType
             ->add('poster', TextType::class)
             ->add('country', TextType::class)
             ->add('year', IntegerType::class)
-            ->add('category',EntityType::class,['choice_label' => 'name'])
+            ->add('category',EntityType::class,['choice_label' => 'name', 'class' => Category::class])
         ;
     }
 

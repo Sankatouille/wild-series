@@ -38,7 +38,6 @@ class Program
 
     /**
      * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="programs")
-     * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\JoinColumn(nullable=false)
      */
     private $category;
