@@ -7,10 +7,12 @@ use App\Entity\Category;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ProgramRepository;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass=ProgramRepository::class)
+ * @UniqueEntity("title", messages="ce titre existe déjà")
  */
 class Program
 {
@@ -22,17 +24,20 @@ class Program
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true )
      */
     private $title;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\NotBlank()
+     * @Assert\Length(max="255")
      */
     private $summary;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\NotBlank()
      */
     private $poster;
 
