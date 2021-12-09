@@ -22,8 +22,7 @@ class ProgramType extends AbstractType
             ->add('poster', TextType::class)
             ->add('country', TextType::class)
             ->add('year', IntegerType::class)
-            ->add('category', null, ['choice_label' => 'name'])
-        ;
+            ->add('category', null, ['choice_label' => 'name']);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
