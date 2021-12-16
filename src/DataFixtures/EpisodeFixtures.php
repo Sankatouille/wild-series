@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Episode;
+use App\Service\Slugify;
 use App\DataFixtures\SeasonFixtures;
 use App\DataFixtures\ProgramFixtures;
 use App\DataFixtures\CategoryFixtures;
@@ -20,16 +21,24 @@ class EpisodeFixtures extends Fixture implements DependentFixtureInterface
         ['Episode 5 ', 5, "nazejaiofhnapokfefjifpaioek"],
     ];
 
+
+    public function __construct(Slugify $slugify)
+    {
+        $this->slugify = $slugify;
+    }
+
     public function load(ObjectManager $manager)
     {
         foreach (self::EPISODES as $key => $episodeInfos) {
             $episode = new Episode();
+            $title = "Episode 1";
             $episode->setTitle($episodeInfos[0]);
+            $episode->setSlug( $this->slugify->generate($title));
             $episode->setNumber($episodeInfos[1]);
             $episode->setSynopsis($episodeInfos[2]);
 
             $manager->persist($episode);
-            
+
             $episode->setSeason($this->getReference("season_4"));
 
         }
@@ -43,7 +52,7 @@ class EpisodeFixtures extends Fixture implements DependentFixtureInterface
           ProgramFixtures::class,
           CategoryFixtures::class,
           SeasonFixtures::class,
-          
+
         ];
     }
 }
