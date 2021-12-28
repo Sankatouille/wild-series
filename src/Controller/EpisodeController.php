@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
 use App\Entity\Program;
 use App\Entity\Episode;
+use App\Form\CommentType;
 use App\Service\Slugify;
 use App\Form\EpisodeType;
 use Symfony\Component\Mime\Email;
@@ -14,6 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Config\Framework\HttpClient\DefaultOptions\RetryFailedConfig;
 
 #[Route('/episode')]
 class EpisodeController extends AbstractController
@@ -59,11 +62,29 @@ class EpisodeController extends AbstractController
         ]);
     }
 
-    #[Route('/{slug}', name: 'episode_show', methods: ['GET'])]
-    public function show(Episode $episode, Slugify $slugify): Response
+    #[Route('/{slug}', name: 'episode_show', methods: ['GET|POST'])]
+    public function show(Request $request, EntityManagerInterface $em, Episode $episode, Slugify $slugify): Response
     {
+        //$slug= new Slugify();
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $comment->setAuthor($this->getUser());
+            $comment->setEpisode($episode);
+
+            $em->persist($comment);
+            $em->flush();
+
+            return $this->redirectToRoute('episode_show', ["slug" => $episode->getSlug()]);
+
+        }
+
         return $this->render('episode/show.html.twig', [
             'episode' => $episode,
+            'form'    => $form->createView()
         ]);
     }
 
