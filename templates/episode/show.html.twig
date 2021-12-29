@@ -30,13 +30,17 @@
 
     <a href="{{ path('episode_edit', {slug: episode.slug}) }}">edit</a>
 
-    {{ include('episode/_delete_form.html.twig') }}
+
     {% if app.user %}
-    <h1>Ajouter un commentaire</h1>
+        {{ include('episode/_delete_form.html.twig') }}
+            <h1>Ajouter un commentaire</h1>
         {{ include('episode/_form.html.twig') }}
     {% endif %}
 
     {% for comment in episode.comments %}
         <div>{{comment.comment}}</div>
+        {% if app.user and ((app.user == comment.author) or is_granted("ROLE_ADMIN"))  %}
+        {{ include('comment/_delete_form.html.twig') }}
+        {% endif %}
     {% endfor %}
 {% endblock %}

@@ -31,16 +31,14 @@ class EpisodeFixtures extends Fixture implements DependentFixtureInterface
     {
         foreach (self::EPISODES as $key => $episodeInfos) {
             $episode = new Episode();
-            $title = "Episode 1";
             $episode->setTitle($episodeInfos[0]);
-            $episode->setSlug( $this->slugify->generate($title));
+            $episode->setSlug($this->slugify->generate($episodeInfos[0]));
             $episode->setNumber($episodeInfos[1]);
             $episode->setSynopsis($episodeInfos[2]);
 
             $manager->persist($episode);
 
             $episode->setSeason($this->getReference("season_4"));
-
         }
         $manager->flush();
     }
@@ -49,9 +47,9 @@ class EpisodeFixtures extends Fixture implements DependentFixtureInterface
     {
         // Tu retournes ici toutes les classes de fixtures dont SeasonFixtures dépend
         return [
-          ProgramFixtures::class,
-          CategoryFixtures::class,
-          SeasonFixtures::class,
+            ProgramFixtures::class,
+            CategoryFixtures::class,
+            SeasonFixtures::class,
 
         ];
     }
