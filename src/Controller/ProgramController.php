@@ -19,6 +19,7 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
@@ -51,7 +52,7 @@ class ProgramController extends AbstractController
      *
      * @Route("/new", name="new")
      */
-    public function new(Request $request, Slugify $slugify, MailerInterface $mailer): Response
+    public function new(Request $request, Slugify $slugify, MailerInterface $mailer, SessionInterface $session): Response
     {
         // Create a new Program Object
         $program = new Program();
@@ -77,6 +78,10 @@ class ProgramController extends AbstractController
             $entityManager->persist($program);
             // Flush the persisted object
             $entityManager->flush();
+
+            //message Flash
+            $this->addFlash('succes', 'The new program has been created');
+
 
             $email = (new Email())
                 ->from($this->getParameter('mailer_from'))
@@ -120,7 +125,7 @@ class ProgramController extends AbstractController
 
 
     /**
-     * @Route("/{slug}/edit", name="program_edit", methods={"GET","POST"})
+     * @Route("/{slug}/edit", name="edit", methods={"GET","POST"})
      */
     public function edit(Request $request, Program $program, EntityManagerInterface $entityManager): Response
     {
@@ -212,5 +217,19 @@ class ProgramController extends AbstractController
             'episode' => $episode_id,
             'form' => $form->createView()
         ]);
+    }
+
+
+    #[Route('/{id}', name: 'delete', methods: ['POST'])]
+    public function delete(Request $request, Program $program, EntityManagerInterface $entityManager, SessionInterface $session): Response
+    {
+        if ($this->isCsrfTokenValid('delete' . $program->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($program);
+            $entityManager->flush();
+
+            $this->addFlash('delete', "La série vient d'être supprimée");
+        }
+
+        return $this->redirectToRoute('program_index', [], Response::HTTP_SEE_OTHER);
     }
 }

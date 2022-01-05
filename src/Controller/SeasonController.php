@@ -6,10 +6,11 @@ use App\Entity\Season;
 use App\Form\SeasonType;
 use App\Repository\SeasonRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/season')]
 class SeasonController extends AbstractController
@@ -23,7 +24,7 @@ class SeasonController extends AbstractController
     }
 
     #[Route('/new', name: 'season_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, SessionInterface $session ): Response
     {
         $season = new Season();
         $form = $this->createForm(SeasonType::class, $season);
@@ -32,6 +33,8 @@ class SeasonController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($season);
             $entityManager->flush();
+
+            $this->addFlash('succes', 'The new season has been created');
 
             return $this->redirectToRoute('season_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -74,6 +77,8 @@ class SeasonController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$season->getId(), $request->request->get('_token'))) {
             $entityManager->remove($season);
             $entityManager->flush();
+
+            $this->addFlash('delete', "La saison vient d'être supprimée");
         }
 
         return $this->redirectToRoute('season_index', [], Response::HTTP_SEE_OTHER);

@@ -15,8 +15,30 @@
             {#{{ encore_entry_script_tags('app') }}#}
         {% endblock %}
     </head>
+
+    {% for  message in app.flashes("succes") %}
+
+            <div class="flash-succes">
+                {{ message }}
+            </div>
+
+    {% endfor %}
+
+    {% for  message in app.flashes("delete") %}
+
+            <div class="flash-delete">
+                {{ message }}
+            </div>
+
+    {% endfor %}
+
+
     <body>
 
-        {% block body %}{% endblock %}
+
+        {% block body %}
+
+
+        {% endblock %}
     </body>
 </html>

@@ -21,6 +21,12 @@ a{
     text-decoration: none;
 }
 
-li{
 
+
+.flash-succes{
+    color: greenyellow;
+}
+
+.flash-delete{
+    color: red;
 }

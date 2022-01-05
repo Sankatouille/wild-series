@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Config\Framework\HttpClient\DefaultOptions\RetryFailedConfig;
 
@@ -30,7 +31,7 @@ class EpisodeController extends AbstractController
     }
 
     #[Route('/new', name: 'episode_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager,Slugify $slugify, MailerInterface $mailer): Response
+    public function new(Request $request, EntityManagerInterface $entityManager,Slugify $slugify, MailerInterface $mailer, SessionInterface $session): Response
     {
         $episode = new Episode();
         $program = new Program();
@@ -44,6 +45,8 @@ class EpisodeController extends AbstractController
             $episode->setSlug($slug);
             $entityManager->persist($episode);
             $entityManager->flush();
+
+            $this->addFlash('succes', "L'épisode vient d'être supprimé");
 
             $email= (new Email())
                     ->from($this->getParameter('mailer_from'))
@@ -112,6 +115,8 @@ class EpisodeController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$episode->getId(), $request->request->get('_token'))) {
             $entityManager->remove($episode);
             $entityManager->flush();
+
+            $this->addFlash('delete', "L'épisode vient d'être supprimé");
         }
 
         return $this->redirectToRoute('episode_index', [], Response::HTTP_SEE_OTHER);
