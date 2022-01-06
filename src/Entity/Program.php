@@ -49,7 +49,7 @@ class Program
     private $category;
 
     /**
-     * @ORM\OneToMany(targetEntity=Season::class, mappedBy="program")
+     * @ORM\OneToMany(targetEntity=Season::class, mappedBy="program", orphanRemoval=true)
      */
     private $seasons;
 

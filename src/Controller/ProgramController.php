@@ -130,7 +130,7 @@ class ProgramController extends AbstractController
     public function edit(Request $request, Program $program, EntityManagerInterface $entityManager): Response
     {
          // Check wether the logged in user is the owner of the program
-         if (!($this->getUser() == $program->getOwner())) {
+         if (!($this->getUser() == $program->getOwner()) && !$this->isGranted("ROLE_ADMIN")) {
             // If not the owner, throws a 403 Access Denied exception
             throw new AccessDeniedException('Only the owner can edit the program!');
         }
@@ -220,7 +220,7 @@ class ProgramController extends AbstractController
     }
 
 
-    #[Route('/{id}', name: 'delete', methods: ['POST'])]
+    #[Route('/{program}', name: 'delete', methods: ['POST'])]
     public function delete(Request $request, Program $program, EntityManagerInterface $entityManager, SessionInterface $session): Response
     {
         if ($this->isCsrfTokenValid('delete' . $program->getId(), $request->request->get('_token'))) {

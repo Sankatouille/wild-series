@@ -109,7 +109,7 @@ class EpisodeController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'episode_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'episode_delete', methods: ['POST'])]
     public function delete(Request $request, Episode $episode, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$episode->getId(), $request->request->get('_token'))) {
